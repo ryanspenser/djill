@@ -1,0 +1,24 @@
+<p>
+  <%= link_to @image.filename do %>
+  <%= image_tag root_url + "/images/" + @image.filename, size: "400x400", alt: @image.filename %><br>
+  <% end %>
+
+<p>
+  <strong>User:</strong>
+  <%= @image.user_id %>
+</p>
+
+<p>
+  <strong>Private:</strong>
+  <%= @image.private %>
+</p>
+
+<p>
+  <strong>Filename:</strong>
+  <%= @image.filename %>
+</p>
+
+<p>
+
+<%= link_to 'Edit', edit_image_path(@image) %> |
+<%= link_to 'Back', images_path %>

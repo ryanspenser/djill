@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @picture_comment.comment %>
+</p>
+
+<%= link_to 'Edit', edit_picture_comment_path(@picture_comment) %> |
+<%= link_to 'Back', picture_comments_path %>

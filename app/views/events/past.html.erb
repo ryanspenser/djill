@@ -1,0 +1,47 @@
+<h1>DJ.ILL's Past Events</h1>
+<div class="container">
+  <table style="width:100%">
+    <tr>
+      <div class="col-lg-4">
+      <th>Name</th>
+      </div>
+      <div class="col-lg-4">
+      <th>Date</th>
+      </div>
+      <div class="col-lg-4">
+      <th>Location</th>
+      </div>
+      <th colspan="3"></th>
+    </tr>
+
+
+
+  <% @events.each do |event| %>
+  <% if event.upcoming == false %>
+    <tr>
+        <div class="col-lg-4">
+          <td><%= event.name %></td>
+        </div>
+        <div class="col-lg-4">
+          <td><%= event.date %></td>
+        </div>
+        <div class="col-lg-4">
+          <td><%= event.location %></td>
+        </div>
+        <div class="col-lg-4">      
+          <td><%= link_to 'Show', event %></td>
+        </div>  
+  <% if current_user != nil && (current_user.email == "rstevenson.gbit@gmail.com" || current_user.email == "jill_m_stevenson@yahoo.com") %>
+        <td><%= link_to 'Edit', edit_event_path(event) %></td>
+        <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>  
+      <% end %>
+    <% end %>       
+    </tr>
+  </table>
+
+</div>
+<br>
+ <% if current_user != nil && current_user.email == "rstevenson.gbit@gmail.com" %>
+<%= link_to 'New Event', new_event_path %>
+<% end %>

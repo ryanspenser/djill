@@ -1,0 +1,171 @@
+<style>
+.yt_video {
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+
+    img {
+    cursor: pointer;
+    width: 100%;
+    height: auto;
+    }
+
+  .glyphicon-thumbs-down {margin-left: 20px;}
+}
+label, h5{color: white;}
+#lightbox{
+  background-color:#eee;
+  padding: 10px;
+  border-bottom: 2px solid #666;
+  border-right: 2px solid #666;
+  }
+#lightbox img{  
+              width: 700px; }
+
+                          div.row > div > div.row {
+                margin-bottom: 15px;
+            }
+            body {
+                padding-bottom: 50px;
+            }
+            div.top-header {
+                margin-bottom:100px;
+            }
+            h3.page-header {
+                margin-top: 50px;
+            }
+            figure {
+                position: relative;
+            }
+            figure figcaption {
+                font-size: 22px;
+                color: #fff;
+                text-decoration: none;
+                bottom: 10px;
+                right: 20px;
+                position: absolute;
+                background-color: #000;
+            }
+      code {
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */}
+</style>
+
+<%= javascript_include_tag "application" %>
+
+<script src="https://www.google.com/jsapi" type="text/javascript"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<%= csrf_meta_tags %>
+
+<div class="container">
+  <div class="col-lg-12 text-center">
+    <h2 class="section-heading">
+      <strong>Name:</strong>
+        <%= @event.name %></h2>
+    <h3>
+      <strong>Date:</strong>
+      <%= @event.date %>
+      <br>
+      <br>
+      <strong>Location:</strong>
+      <%= @event.location %>
+      <br>
+      <br>
+     <strong>Event Details:</strong>
+      <%= @event.description %>
+    </h3>
+  </div>
+</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2>  <%= @event.name %> Photos </h2>
+      </div>
+    </div>
+   <div class="row">
+     <% @event.images.each do |image| %>
+       <% if !image.new_record? %>
+         <div class="col-sm-4">
+            <a href="/images/<%=image.filename %>"  data-toggle="lightbox" data-gallery="multiimages"> <%= image_tag(image.filename, size: "200x200", alt: image.filename) %>  </a>
+        </div>
+     <% end %>   
+   <% end %>
+  </div>
+</div>
+
+<div class="container">
+<% if @event.videos.any? %>
+  <h2> <%= @event.name %> Videos</h2>
+    <center><div id="player-wrapper"></div></center>
+
+    <% @event.videos.in_groups_of(3) do |group| %>
+      <div class="row">
+        <% group.each do |video| %>
+          <% if video %>
+           <% if !video.new_record? %>
+            <div class="col-md-4">
+              <div class="yt_video thumbnail">
+                <%= image_tag "https://img.youtube.com/vi/#{video.uid}/mqdefault.jpg", alt: video.title,
+                              class: 'yt_preview img-rounded', :"data-uid" => video.uid %>
+
+                <div class="caption">
+                  <h5 style="color:black"><%= video.title %></h5>
+                  <p style ="color:black">Author: <b><%= video.author %></b></p>
+                  <p style ="color:black">Duration: <b><%= video.duration %></b></p>
+                  <p style ="color:black">
+                    <span class="glyphicon glyphicon glyphicon-thumbs-up"></span> <%= video.likes %>
+                    <span class="glyphicon glyphicon glyphicon-thumbs-down"></span> <%= video.dislikes %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+<% end %>
+</div>
+
+
+
+<div class="container">
+  <div class =class"col-lg-16 text-center">
+  	<h2> Talk About <%= @event.name %>! </h2>
+    <% if @event.comments.length == 1 %>
+      <%= 'No Comments' %>
+    <% else %>
+      <% if @event.comments.each do |comment| %>
+        <% if !comment.new_record? %>
+                  <div class="row text-center">
+                    <div class="col-sm-8">
+                      <h5><%= comment.comment %></h5>
+                      </div>
+                    <div class="col-sm-2">
+                      <h5><%= link_to 'Edit', edit_comment_path(comment) %></h5>
+                      </div>
+                    <div class="col-sm-2">
+                      <h5><%= link_to 'Remove', comment, method: :delete, data: { confirm: 'Are you sure?' } %></h5>
+                  </div>
+                  <hr>
+                </div>
+          <% end %>
+        <% end %>
+      <% end %> 
+    <% end %>
+    <br> 
+  <%= render 'comments/form' %>
+  </div>
+</div>
+<br>
+<br>
+ <% if current_user != nil && (current_user.email == "rstevenson.gbit@gmail.com" || current_user.email == "jill_m_stevenson@yahoo.com")  %>
+<div class="container">
+    <%= render 'images/form' %>
+    <%= render 'videos/form' %>
+</div>
+<% end %>
+
